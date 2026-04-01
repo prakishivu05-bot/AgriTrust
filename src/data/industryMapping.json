@@ -1,0 +1,28 @@
+{
+  "coconut oil": "Oil Industry",
+  "copra": "Oil Industry",
+  "coir": "Fiber Industry",
+  "husk": "Fiber Industry",
+  "charcoal": "Fuel Industry",
+
+  "banana chips": "Food Processing",
+  "banana powder": "Food Processing",
+  "banana fiber": "Fiber Industry",
+  "animal feed": "Livestock Industry",
+  "organic compost": "Farming Inputs",
+
+  "tomato puree": "Food Processing",
+  "ketchup": "Food Processing",
+  "sauce": "Food Processing",
+  "tomato paste": "Food Processing",
+
+  "mango pulp": "Food Processing",
+  "jam": "Food Processing",
+  "pickle": "Food Processing",
+  "dried mango": "Food Processing",
+
+  "jaggery (gur)": "Food Processing",
+  "sugar": "Sugar Industry",
+  "ethanol": "Biofuel Industry",
+  "bagasse (fuel)": "Energy Industry"
+}

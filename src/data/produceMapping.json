@@ -1,0 +1,42 @@
+{
+  "coconut": {
+    "category": "fibrous",
+    "grades": {
+      "A": ["Sell fresh"],
+      "B": ["Coconut oil", "Copra"],
+      "C": ["Coir", "Husk", "Charcoal"]
+    }
+  },
+  "banana": {
+    "category": "fruit",
+    "grades": {
+      "A": ["Sell fresh"],
+      "B": ["Banana chips", "Banana powder"],
+      "C": ["Animal feed", "Organic compost", "Banana fiber"]
+    }
+  },
+  "tomato": {
+    "category": "vegetable",
+    "grades": {
+      "A": ["Sell fresh"],
+      "B": ["Tomato puree"],
+      "C": ["Ketchup", "Sauce", "Tomato paste"]
+    }
+  },
+  "mango": {
+    "category": "fruit",
+    "grades": {
+      "A": ["Sell fresh"],
+      "B": ["Mango pulp"],
+      "C": ["Jam", "Pickle", "Dried mango"]
+    }
+  },
+  "sugarcane": {
+    "category": "cash_crop",
+    "grades": {
+      "A": ["Sell to mills"],
+      "B": ["Jaggery (Gur)", "Sugar"],
+      "C": ["Ethanol", "Bagasse (fuel)", "Animal feed"]
+    }
+  }
+}
