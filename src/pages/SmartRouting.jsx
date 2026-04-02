@@ -1,181 +1,171 @@
 import React, { useState } from 'react';
-import { ArrowRight, Leaf, Cpu, TrendingUp, Sparkles, MapPin, Factory, Sprout, Target } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import Card from '../components/Card';
-import Button from '../components/Button';
-import produceMap from '../data/produceMapping.json';
-import industryMap from '../data/industryMapping.json';
+import { ArrowLeft, Cpu, Sparkles, AlertTriangle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useWeather } from '../contexts/WeatherContext';
 
 const SmartRouting = () => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
-  const [product, setProduct] = useState('coconut');
-  const [grades, setGrades] = useState({ A: 0, B: 0, C: 0 });
-  const [isCalculated, setIsCalculated] = useState(false);
-  const [showPlanner, setShowPlanner] = useState(false);
+  const { scenario } = useWeather();
+  
+  const crops = [
+    { key: 'coconut', name: 'Coconut', icon: '🥥' },
+    { key: 'banana', name: 'Banana', icon: '🍌' },
+    { key: 'tomato', name: 'Tomato', icon: '🍅' },
+    { key: 'mango', name: 'Mango', icon: '🥭' },
+    { key: 'sugarcane', name: 'Sugarcane', icon: '🎋' }
+  ];
 
-  const calculateUtilPlan = (e) => {
-    e.preventDefault();
-    if(grades.A > 0 || grades.B > 0 || grades.C > 0) setIsCalculated(true);
+  const [selectedCrop, setSelectedCrop] = useState(crops[0]);
+  const [quantities, setQuantities] = useState({
+    gradeA: 0,
+    gradeB: 0,
+    gradeC: 0
+  });
+
+  const handleQuantityChange = (grade, value) => {
+    setQuantities(prev => ({
+      ...prev,
+      [grade]: parseInt(value) || 0
+    }));
   };
 
-  const getIndustry = (itemName) => {
-    const key = itemName.toLowerCase();
-    return industryMap[key] || "General Market";
+  const generateAIPlan = () => {
+    navigate('/farmer/pooling', { 
+      state: { 
+        crop: selectedCrop.name,
+        icon: selectedCrop.icon,
+        cropKey: selectedCrop.key,
+        quantities
+      } 
+    });
   };
-
-  const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
-  const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { type: "spring" } } };
 
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="p-4 sm:p-6 lg:p-8 max-w-md md:max-w-3xl mx-auto space-y-6 pb-24">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
-           {t('router.title', 'Smart Routing Engine')} <Cpu className="text-emerald-500" />
-        </h1>
-        <p className="text-gray-500 dark:text-gray-400 font-medium">{t('router.subtitle', 'Distribute crop byproducts for maximum profit.')}</p>
-      </header>
-      
-      {!isCalculated ? (
-        <motion.form variants={item} onSubmit={calculateUtilPlan} className="space-y-5">
-          <Card className="space-y-4">
-            <div>
-              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">{t('router.selectCrop', 'Select Crop')}</label>
-              <select 
-                value={product}
-                onChange={(e) => setProduct(e.target.value)}
-                className="w-full p-4 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500 font-medium capitalize outline-none"
-              >
-                {Object.keys(produceMap).map(k => <option key={k} value={k}>{k}</option>)}
-              </select>
-            </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans p-4 sm:p-6 lg:p-8 pb-32 transition-colors">
+      <div className="max-w-2xl mx-auto space-y-6 pt-4">
+        
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-4">
+          <button 
+            onClick={() => navigate('/farmer')}
+            className="w-10 h-10 bg-white dark:bg-gray-800 rounded-xl shadow-sm flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-gray-700 transition-colors"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <div>
+            <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
+              Smart Routing Engine <Cpu className="text-emerald-500" size={24} />
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 font-medium text-sm mt-1">
+              Distribute crop byproducts for maximum profit.
+            </p>
+          </div>
+        </div>
 
-            <div className="pt-2">
-               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">{t('router.quantities', 'Quantities (kg)')}</label>
-               <div className="space-y-3">
-                 {['A', 'B', 'C'].map((grade) => (
-                   <div key={grade} className="flex items-center gap-3">
-                     <span className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold bg-gray-100 dark:bg-gray-800 ${grade==='A'?'text-emerald-600 dark:text-emerald-400':grade==='B'?'text-amber-600 dark:text-amber-400':'text-red-500 dark:text-red-400'}`}>
-                       Gr {grade}
-                     </span>
-                     <input 
-                       type="number" min="0" 
-                       value={grades[grade]}
-                       onChange={e => setGrades({...grades, [grade]: Number(e.target.value)})}
-                       className="flex-1 p-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500 outline-none font-medium" 
-                       placeholder={`Grade ${grade} kg`}
-                     />
-                   </div>
-                 ))}
-               </div>
+        {/* Input Form */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 space-y-6">
+          
+          {/* Crop Selector */}
+          <div className="space-y-2">
+            <label className="block font-bold text-gray-900 dark:text-white text-sm">Select Crop / Produce</label>
+            <select 
+              value={selectedCrop.key}
+              onChange={(e) => {
+                const crop = crops.find(c => c.key === e.target.value);
+                setSelectedCrop(crop);
+              }}
+              className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-medium text-base p-3.5 rounded-xl focus:outline-none focus:border-emerald-500 shadow-sm transition-colors appearance-none cursor-pointer"
+              style={{ backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%239CA3AF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem top 50%', backgroundSize: '0.8rem auto' }}
+            >
+              {crops.map((crop) => (
+                <option key={crop.key} value={crop.key}>{crop.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Quantities */}
+          <div className="space-y-3 pt-2">
+            <label className="block font-bold text-gray-900 dark:text-white text-sm">Quantities (kg)</label>
+            
+            <div className="flex items-center gap-4">
+              <span className="w-12 font-black text-emerald-500">Gr A</span>
+              <input 
+                type="number"
+                min="0"
+                value={quantities.gradeA || ''}
+                onChange={(e) => handleQuantityChange('gradeA', e.target.value)}
+                placeholder="0"
+                className="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-medium text-base p-3.5 rounded-xl focus:outline-none focus:border-emerald-500 shadow-sm transition-colors"
+              />
             </div>
             
-            <Button type="submit" className="w-full mt-4">
-              {t('router.generate', 'Generate AI Plan')} <Sparkles size={18} />
-            </Button>
-          </Card>
-        </motion.form>
-      ) : (
-        <motion.div variants={container} className="space-y-5">
-           <motion.div variants={item}>
-             <Card highlight className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/20 border-none relative overflow-hidden">
-               <div className="flex justify-between items-start mb-6 relative z-10">
-                 <div>
-                    <h2 className="text-xs font-black uppercase tracking-widest text-emerald-800 dark:text-emerald-300">{t('router.planTitle', 'Smart Utilization Plan')}</h2>
-                    <p className="text-3xl font-black text-gray-900 dark:text-gray-100 mt-1 capitalize flex items-center gap-2">{product} <Leaf size={24} className="text-emerald-500" /></p>
-                 </div>
-                 <button onClick={() => setIsCalculated(false)} className="bg-white dark:bg-gray-800 px-3 py-1 rounded shadow-sm text-xs font-bold text-gray-600 dark:text-gray-300 absolute right-0">X</button>
-               </div>
-               
-               <div className="space-y-4 relative z-10">
-                  {['A', 'B', 'C'].map((grade, idx) => {
-                    if (grades[grade] === 0) return null;
-                    const suggestions = produceMap[product].grades[grade];
-                    return (
-                      <motion.div key={grade} initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} transition={{delay: 0.2 + (idx*0.1)}} className="bg-white/90 dark:bg-gray-800/90 p-4 rounded-xl shadow-sm">
-                        <div className="flex justify-between items-center border-b border-gray-100 dark:border-gray-700 pb-2 mb-2">
-                          <span className="font-bold text-gray-700 dark:text-gray-200">Grade {grade} Produce</span>
-                          <span className="text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-100 dark:bg-emerald-900/50 px-2 py-0.5 rounded-full text-xs">{grades[grade]} kg</span>
-                        </div>
-                        <div className="space-y-2">
-                          {suggestions.map((suggestion, sIdx) => (
-                            <div key={sIdx} className="flex items-start gap-2 pl-1">
-                               <ArrowRight size={16} className="text-gray-400 dark:text-gray-500 mt-1 flex-shrink-0" />
-                               <div>
-                                 <p className="font-bold text-gray-900 dark:text-gray-100">{suggestion}</p>
-                                 <p className="text-xs font-medium text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
-                                   <Factory size={12} /> {getIndustry(suggestion)}
-                                 </p>
-                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )
-                  })}
-               </div>
-             </Card>
-           </motion.div>
+            <div className="flex items-center gap-4">
+              <span className="w-12 font-black text-amber-500">Gr B</span>
+              <input 
+                type="number"
+                min="0"
+                value={quantities.gradeB || ''}
+                onChange={(e) => handleQuantityChange('gradeB', e.target.value)}
+                placeholder="0"
+                className="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-medium text-base p-3.5 rounded-xl focus:outline-none focus:border-amber-500 shadow-sm transition-colors"
+              />
+            </div>
 
-           {/* AI Next-Season Planner Feature */}
-           <motion.div variants={item}>
-              <Card className="border-purple-200 dark:border-purple-800 bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-purple-900/20 dark:to-fuchsia-900/10 cursor-pointer shadow-md"
-                    onClick={() => setShowPlanner(!showPlanner)}>
-                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                       <Sprout className="text-purple-600 dark:text-purple-400" size={24} />
-                       <h3 className="font-bold text-purple-900 dark:text-purple-200 text-lg">AI Next-Season Planner</h3>
-                    </div>
-                    <Button variant="outline" className="text-xs py-1.5 px-3 border-purple-500 text-purple-700 dark:text-purple-300 pointer-events-none">
-                       {showPlanner ? 'Hide' : 'Reveal Strategy'}
-                    </Button>
-                 </div>
-                 
-                 <AnimatePresence>
-                   {showPlanner && (
-                     <motion.div 
-                       initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                       animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
-                       exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                       className="overflow-hidden border-t border-purple-200 dark:border-purple-800/50 pt-4"
-                     >
-                        <div className="bg-white/80 dark:bg-gray-900/60 p-4 rounded-xl space-y-3 shadow-inner">
-                           <div className="flex items-center gap-2 mb-1">
-                             <Target size={16} className="text-purple-600 dark:text-purple-400"/>
-                             <p className="font-black text-gray-900 dark:text-white uppercase tracking-wider text-xs">Next Year Strategy</p>
-                           </div>
-                           <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                             To increase Grade A from <span className="text-purple-700 dark:text-purple-400 font-bold">{grades.A || 50} kg</span> → <span className="text-emerald-600 dark:text-emerald-400 font-bold">{(grades.A || 50) + 25} kg</span>:
-                           </p>
-                           <ul className="text-sm space-y-2 text-gray-600 dark:text-gray-400 font-medium ml-1">
-                              <li className="flex items-start gap-2"><span className="text-emerald-500">•</span> Plant 10 days earlier based on climate shift</li>
-                              <li className="flex items-start gap-2"><span className="text-emerald-500">•</span> Use drip irrigation during flowering stage</li>
-                              <li className="flex items-start gap-2"><span className="text-emerald-500">•</span> Add potassium fertilizer analyzing recent soil data</li>
-                              <li className="flex items-start gap-2"><span className="text-emerald-500">•</span> Avoid peak heat stage to prevent nutrient loss</li>
-                           </ul>
-                        </div>
-                     </motion.div>
-                   )}
-                 </AnimatePresence>
-              </Card>
-           </motion.div>
+            <div className="flex items-center gap-4">
+              <span className="w-12 font-black text-red-500 dark:text-red-400">Gr C</span>
+              <input 
+                type="number"
+                min="0"
+                value={quantities.gradeC || ''}
+                onChange={(e) => handleQuantityChange('gradeC', e.target.value)}
+                placeholder="0"
+                className="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-medium text-base p-3.5 rounded-xl focus:outline-none focus:border-red-500 dark:focus:border-red-400 shadow-sm transition-colors"
+              />
+            </div>
+          </div>
 
-           {/* Profit Insight */}
-           {grades.C > 0 && (
-             <motion.div variants={item} className="p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-xl flex items-start gap-3 shadow-md">
-               <TrendingUp className="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-               <div>
-                 <p className="font-bold text-blue-900 dark:text-blue-200">{t('router.profitTitle', 'Profit Insight')}</p>
-                 <p className="text-sm text-blue-800 dark:text-blue-300 mt-1">
-                    {t('router.profitDesc', 'Processing your Grade C produce gives roughly ')} 
-                    <strong className="font-black text-blue-900 dark:text-blue-100 bg-blue-100 dark:bg-blue-900/50 px-1 rounded">30% higher value</strong> than raw marketplace selling.
-                 </p>
-               </div>
-             </motion.div>
-           )}
-        </motion.div>
-      )}
-    </motion.div>
+          {/* Contextual Weather AI Injection */}
+          <AnimatePresence>
+            {scenario.riskLevel !== 'Low' && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }} 
+                animate={{ opacity: 1, height: 'auto' }} 
+                className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 rounded-xl p-4 overflow-hidden"
+              >
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={20} />
+                  <div>
+                    <h4 className="font-bold text-amber-900 dark:text-amber-300 text-sm flex items-center gap-2">
+                       AI Weather Context <Sparkles size={14} className="text-amber-500" />
+                    </h4>
+                    <p className="text-sm font-medium text-amber-800 dark:text-amber-200/80 mt-1">
+                      {scenario.condition === 'Heavy Rain' 
+                        ? 'Severe weather detected. Our engine automatically prioritizes same-day rapid routing to avoid transit spoilage.' 
+                        : 'Abnormal weather detected. Market analysis highly recommends expediting your harvest and bypassing standard holding periods.'}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className="pt-4">
+            <motion.button 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={generateAIPlan}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3.5 rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 font-bold transition-colors"
+            >
+              Analyze Market Options 🤝
+            </motion.button>
+          </div>
+        </div>
+
+      </div>
+    </div>
   );
 };
 

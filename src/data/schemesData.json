@@ -1,0 +1,100 @@
+[
+  {
+    "id": "pm-kisan",
+    "name": "PM-KISAN Samman Nidhi",
+    "shortName": "PM-KISAN",
+    "category": "Direct Cash Benefit",
+    "benefit": "₹6000/year",
+    "benefitType": "cash",
+    "description": "Pradhan Mantri Kisan Samman Nidhi is a central sector scheme that provides a minimum income support of ₹6,000 per year to all landholding farmer families across the country.",
+    "whyRecommended": "Guaranteed income support for all farm sizes to help cover agricultural and household expenses.",
+    "eligibility": [
+      "Must hold cultivable land in India.",
+      "Must have a valid Aadhaar mapped to a bank account.",
+      "Institutional landholders and high-income professionals are excluded."
+    ],
+    "documentsRequired": [
+      "Aadhaar Card",
+      "Land Ownership Documents (Patta/Chitta)",
+      "Bank Passbook (IFSC code mandatory)"
+    ],
+    "targetCrops": ["all"],
+    "targetIssues": ["low_income"],
+    "popularityScore": 95,
+    "communityInsight": "Over 2,140 farmers in your district claimed this benefit this year."
+  },
+  {
+    "id": "pmksy-irrigation",
+    "name": "PM Krishi Sinchayee Yojana",
+    "shortName": "PMKSY",
+    "category": "Infrastructure Subsidy",
+    "benefit": "60% Subsidy on Drip Irrigation",
+    "benefitType": "subsidy",
+    "description": "Focuses on 'More crop per drop' by providing substantial subsidies for the installation of micro-irrigation systems like drip and sprinkler lines.",
+    "whyRecommended": "Essential for improving yield grading while significantly reducing water usage costs.",
+    "eligibility": [
+      "Farmers with up to 5 acres of land receive maximum prioritization (small/marginal).",
+      "Available for all commercial and horticulture crops.",
+      "Must have a validated water source (borewell/canal/pond)."
+    ],
+    "documentsRequired": [
+      "Latest Land Extract",
+      "Micro-Irrigation Quotation from approved vendor",
+      "Soil & Water Testing Report",
+      "Aadhaar Card"
+    ],
+    "targetCrops": ["coconut", "tomato", "banana", "mango", "sugarcane", "all"],
+    "targetIssues": ["low_yield", "water_stress"],
+    "popularityScore": 88,
+    "communityInsight": "Farmers using this subsidy increased their Grade A yield by an average of 34%."
+  },
+  {
+    "id": "pmfby-insurance",
+    "name": "PM Fasal Bima Yojana",
+    "shortName": "PMFBY",
+    "category": "Crop Insurance",
+    "benefit": "Full Coverage against Natural Disasters",
+    "benefitType": "insurance",
+    "description": "Provides comprehensive insurance coverage against crop failure due to non-preventable natural risks like droughts, floods, and unseasonal rainfall.",
+    "whyRecommended": "Your designated location has recorded high weather variability in the last 12 months.",
+    "eligibility": [
+      "Notifying crops in the defined area.",
+      "Sharecroppers and tenant farmers are also eligible.",
+      "Must apply before the notified final cutoff date for the respective cropping season."
+    ],
+    "documentsRequired": [
+      "Sowing Certificate from Village Accountant",
+      "Land Ownership Proof or Tenancy Agreement",
+      "Bank Account Details"
+    ],
+    "targetCrops": ["all"],
+    "targetIssues": ["weather_risk", "pests"],
+    "popularityScore": 92,
+    "communityInsight": "Last season, 142 claims were successfully processed in your Taluk."
+  },
+  {
+    "id": "midh-horticulture",
+    "name": "Mission for Integrated Development of Horticulture",
+    "shortName": "MIDH",
+    "category": "Specialized Subsidy",
+    "benefit": "40-50% Subsidy on Plantation",
+    "benefitType": "subsidy",
+    "description": "A centrally sponsored scheme designed specifically to promote the holistic growth of the horticulture sector encompassing fruits, vegetables, root & tuber crops, mushrooms, spices, flowers, aromatic plants, coconut, cashew, cocoa and bamboo.",
+    "whyRecommended": "Highly beneficial since you are cultivating high-value horticulture crops.",
+    "eligibility": [
+      "Must intend to grow approved horticulture crops.",
+      "Project proposals required for subsidies exceeding standard plantation costs.",
+      "Applicable for setting up pack-houses and cold chains."
+    ],
+    "documentsRequired": [
+      "Detailed Project Report (DPR) for large setups",
+      "Land Records",
+      "Bank Account Details",
+      "Aadhaar"
+    ],
+    "targetCrops": ["coconut", "mango", "banana", "tomato"],
+    "targetIssues": ["horticulture", "post_harvest_loss"],
+    "popularityScore": 76,
+    "communityInsight": "7 neighboring farmers got subsidies for building on-farm packhouses last month."
+  }
+]
