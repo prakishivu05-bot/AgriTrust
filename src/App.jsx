@@ -26,8 +26,11 @@ import Transaction from './pages/Transaction';
 import History from './pages/History';
 import Splash from './components/Splash';
 import MLForecast from './components/MLForecast';
+import FarmConnect from './pages/FarmConnect';
+import FarmCluster from './pages/FarmCluster';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { WeatherProvider } from './contexts/WeatherContext';
+import { FarmConnectProvider } from './contexts/FarmConnectContext';
 import './i18n'; // initialize i18n globally
 
 function App() {
@@ -36,11 +39,12 @@ function App() {
   return (
     <ThemeProvider>
       <WeatherProvider>
-        {showSplash && <Splash onComplete={() => setShowSplash(false)} />}
-        <Router>
-        <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 font-sans selection:bg-emerald-200 text-gray-900 dark:text-gray-100 pb-16 sm:pb-0 transition-colors duration-500 ${showSplash ? 'fixed inset-0 overflow-hidden' : ''}`}>
-          <Navbar />
-          <main>
+        <FarmConnectProvider>
+          {showSplash && <Splash onComplete={() => setShowSplash(false)} />}
+          <Router>
+          <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 font-sans selection:bg-emerald-200 text-gray-900 dark:text-gray-100 pb-16 sm:pb-0 transition-colors duration-500 ${showSplash ? 'fixed inset-0 overflow-hidden' : ''}`}>
+            <Navbar />
+            <main>
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/farmer" element={<Dashboard />} />
@@ -54,6 +58,8 @@ function App() {
               <Route path="/farmer/forecast" element={<MLForecast />} />
               <Route path="/farmer/utilization" element={<SmartRouting />} />
               <Route path="/farmer/pooling" element={<FarmerPooling />} />
+              <Route path="/farmer/connect" element={<FarmConnect />} />
+              <Route path="/farmer/cluster/:id" element={<FarmCluster />} />
               <Route path="/farmer/smart-utilization" element={<SmartUtilizationPlan />} />
               <Route path="/farmer/schemes" element={<SchemesDashboard />} />
               <Route path="/farmer/schemes/status" element={<SchemeStatus />} />
@@ -73,9 +79,10 @@ function App() {
               <Route path="/transaction" element={<Transaction />} />
               <Route path="/history" element={<History />} />
             </Routes>
-          </main>
-        </div>
-      </Router>
+            </main>
+          </div>
+        </Router>
+        </FarmConnectProvider>
       </WeatherProvider>
     </ThemeProvider>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import splashImage from '../assets/splash.png';
+import splashImage from '../assets/splash.avif';
 
 const Splash = ({ onComplete }) => {
   const [isShattering, setIsShattering] = useState(false);

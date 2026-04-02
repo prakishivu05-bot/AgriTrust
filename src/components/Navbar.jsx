@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Tractor, History, LayoutDashboard, Cpu, Moon, Sun, Languages } from 'lucide-react';
+import { Tractor, History, LayoutDashboard, Cpu, Moon, Sun, Languages, Users } from 'lucide-react';
 import { ThemeContext } from '../contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
@@ -45,6 +45,7 @@ const Navbar = () => {
             <div className="hidden sm:flex items-center gap-6">
                <Link to="/" className={`font-medium text-sm ${location.pathname==='/'?'text-emerald-600 dark:text-emerald-400':'text-gray-600 dark:text-gray-300 hover:text-emerald-600'}`}>{t('nav.roles', 'Roles')}</Link>
                <Link to="/farmer" className={`font-medium text-sm ${location.pathname==='/farmer'?'text-emerald-600 dark:text-emerald-400':'text-gray-600 dark:text-gray-300 hover:text-emerald-600'}`}>{t('nav.farmer', 'Farmer')}</Link>
+               <Link to="/farmer/connect" className={`font-medium text-sm ${location.pathname.startsWith('/farmer/connect') || location.pathname.startsWith('/farmer/cluster') ?'text-emerald-600 dark:text-emerald-400':'text-gray-600 dark:text-gray-300 hover:text-emerald-600'}`}>Network</Link>
                <Link to="/vendor" className={`font-medium text-sm ${location.pathname==='/vendor'?'text-blue-600 dark:text-blue-400':'text-gray-600 dark:text-gray-300 hover:text-blue-600'}`}>{t('nav.vendor', 'Vendor')}</Link>
             </div>
             
@@ -76,6 +77,7 @@ const Navbar = () => {
       <div className="fixed bottom-0 w-full bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-50 sm:hidden transition-colors duration-500">
         <div className="flex justify-around items-center h-16 max-w-md mx-auto px-2">
           {navLink('/farmer', <LayoutDashboard size={22} />, 'nav.dashboard')}
+          {navLink('/farmer/connect', <Users size={22} />, 'Network')}
           {navLink('/smart-routing', <Cpu size={22} />, 'nav.mlRouter')}
           {navLink('/history', <History size={22} />, 'nav.history')}
         </div>
